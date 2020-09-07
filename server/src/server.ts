@@ -17,21 +17,13 @@ io.on('connection', function (client) {
 
   console.log('Client connected...');
 
-  client.on('join', function (data) {
-    console.log('> from client: ', JSON.parse(data));
-  });
-
-  client.on('send', function (data) {
-
-  });
-
   const intervalId = setInterval(function () {
     const randomData = getRandomData();
     const strData = randomData
       .map(({ stockCode, price }) => `${stockCode} ${price}`)
       .join('\n');
 
-    client.emit(strData);
+    client.emit('data', strData);
   }, 1000);
 
   client.on('disconnect', function (data) {
