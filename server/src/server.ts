@@ -23,14 +23,21 @@ io.on('connection', function (client) {
 
   client.on('send', function (data) {
 
-    setInterval(function () {
-      const strData = getRandomData()
-        .map(({ stockCode, price }) => `${stockCode} ${price}`)
-        .join('\n');
+  });
 
-      client.emit(strData);
-    }, 1000);
-  })
+  const intervalId = setInterval(function () {
+    const randomData = getRandomData();
+    const strData = randomData
+      .map(({ stockCode, price }) => `${stockCode} ${price}`)
+      .join('\n');
+
+    client.emit(strData);
+  }, 1000);
+
+  client.on('disconnect', function (data) {
+    console.log('client closed');
+    clearInterval(intervalId);
+  });
 
 });
 
