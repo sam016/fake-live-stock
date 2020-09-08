@@ -10,6 +10,7 @@
   display: grid;
   grid-template-columns: var(--size-col-code) 1fr var(--size-col-price) var(--size-col-ts);
   column-gap: 1rem;
+  cursor: pointer;
 
   > div {
     padding: 0 1rem;
@@ -27,5 +28,9 @@
 
   &:nth-child(2n) {
     background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:focus {
+    outline: 1px solid dodgerblue;
   }
 }

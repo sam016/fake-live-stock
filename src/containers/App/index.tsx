@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import StockTable from '../../components/StockTable';
 import './style.scss';
 import useStockWS from '../../hooks/useStockWS';
+import { Stock } from '../../models/stock';
 
 /* const STOCKS = [
   { code: 'st', name: 'strategic', price: 42.22, lastTS: 0, history: [] },
@@ -26,8 +27,8 @@ import useStockWS from '../../hooks/useStockWS';
 
 const App = () => {
   const [stockData, status] = useStockWS();
-  // const [filteredStocks, setFilteredStocks] = useState<Array<Stock>>([]);
   const [searchText, setSearchText] = useState<string>('');
+  const [selectedStock, setSelectedStock] = useState<Stock>();
 
   // create array from stockData object
   const stocks = useMemo(() => Object.values(stockData), [stockData]);
@@ -49,6 +50,15 @@ const App = () => {
     const searchText = e.target.value.trim();
     setSearchText(searchText);
   }, []);
+
+  // create a search handler for search box
+  const stockSelectHandler = useCallback((stock: Stock) => {
+    if (selectedStock && stock.code === selectedStock.code) {
+      setSelectedStock(undefined);
+    } else {
+      setSelectedStock(stock);
+    }
+  }, [selectedStock]);
 
   return (
     <div className="app">
@@ -75,6 +85,7 @@ const App = () => {
           </div>
           : <StockTable
             stocks={filteredStocks}
+            onStockClick={stockSelectHandler}
           />}
       </div>
       <div className="app__footer page-container">
