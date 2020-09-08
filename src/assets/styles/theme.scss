@@ -17,6 +17,12 @@ body {
   color: var(--c-primary);
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 .h1 {
   font-size: 2rem;
   font-weight: 600;

@@ -1,0 +1,23 @@
+.stock-table {
+  --size-col-code: 5rem;
+  --size-col-price: 5rem;
+  --size-col-ts: 8rem;
+
+  height: 100%;
+}
+
+.stock-row {
+  display: grid;
+  grid-template-columns: var(--size-col-code) 1fr var(--size-col-price) var(--size-col-ts);
+  column-gap: 1rem;
+
+  &__price {
+    text-align: right;
+  }
+
+  .dollar::before {
+    content: "$";
+    font-size: 80%;
+    margin-right: 0.1rem;
+  }
+}

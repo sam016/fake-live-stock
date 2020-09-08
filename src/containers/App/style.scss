@@ -1,0 +1,50 @@
+@import '../../assets/styles/mixins';
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header {
+  }
+  &__content {
+    flex: 1;
+  }
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .connection-status {
+      --status-fill-color: #aaa;
+
+      display: flex;
+      align-items: center;
+
+      &.Connected {
+        --status-fill-color: var(--c-success-light);
+        color: var(--c-success);
+      }
+
+      &.Reconnecting,
+      &.Disconnected {
+        --status-fill-color: var(--c-error-light);
+        color: var(--c-error);
+      }
+
+      &::before {
+        content: " ";
+        display: inline-block;
+        border-radius: 50%;
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: var(--status-fill-color);
+        margin-right: 0.5rem;
+      }
+    }
+
+    @include sm {
+      flex-direction: row;
+    }
+  }
+}

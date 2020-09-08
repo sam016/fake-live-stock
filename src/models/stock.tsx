@@ -1,6 +1,9 @@
 
 export interface Stock {
+  code: string;
   name: string;
+  price: number;
+  lastTS: number;
   history: Array<StockPriceTS>;
 }
 
