@@ -1,4 +1,4 @@
-@import '../../assets/styles/mixins';
+@import "../../assets/styles/mixins";
 
 .app {
   display: flex;
@@ -6,10 +6,20 @@
   height: 100%;
 
   &__header {
+    display: flex;
+    flex-direction: column;
+
+    .search-box > input {
+      padding: 0.1rem 0.4rem;
+      font-size: 1rem;
+    }
   }
+
   &__content {
     flex: 1;
+    overflow: auto;
   }
+
   &__footer {
     display: flex;
     flex-direction: column;
@@ -42,8 +52,16 @@
         margin-right: 0.5rem;
       }
     }
+  }
 
-    @include sm {
+  @include sm {
+    &__header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &__footer {
       flex-direction: row;
     }
   }

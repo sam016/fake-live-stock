@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import StockTable from '../../components/StockTable';
 import './style.scss';
 import useStockWS from '../../hooks/useStockWS';
@@ -26,6 +26,29 @@ import useStockWS from '../../hooks/useStockWS';
 
 const App = () => {
   const [stockData, status] = useStockWS();
+  // const [filteredStocks, setFilteredStocks] = useState<Array<Stock>>([]);
+  const [searchText, setSearchText] = useState<string>('');
+
+  // create array from stockData object
+  const stocks = useMemo(() => Object.values(stockData), [stockData]);
+
+  // memo filtered stocks from (searchText & all-stocks)
+  const filteredStocks = useMemo(() => {
+    // if searchText is empty; show all stocks
+    if (searchText.length === 0) {
+      return stocks;
+    }
+
+    // filter stocks from name/code
+    return stocks.filter(item => item.name.toLowerCase().includes(searchText)
+      || item.code.toLowerCase().includes(searchText));
+  }, [stocks, searchText]);
+
+  // create a search handler for search box
+  const searchChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchText = e.target.value.trim();
+    setSearchText(searchText);
+  }, []);
 
   return (
     <div className="app">
@@ -33,11 +56,26 @@ const App = () => {
         <div className="h2">
           Live Stock
         </div>
+        <div className="search-box">
+          <input
+            type="text"
+            onChange={searchChangeHandler}
+            placeholder="Search stocks..."
+          />
+        </div>
       </div>
       <div className="app__content page-container">
-        <StockTable
-          stocksOb={stockData}
-        />
+        {filteredStocks.length === 0
+          ? <div className="stock-no-result">
+            {
+              searchText
+                ? <>No result found for "{searchText}"</>
+                : <>No data available from server</>
+            }
+          </div>
+          : <StockTable
+            stocks={filteredStocks}
+          />}
       </div>
       <div className="app__footer page-container">
         <div className="builder">
