@@ -3,7 +3,7 @@ import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import TimeAgo from 'react-timeago'
 import { Stock } from '../../models/stock';
-import './style.scss';
+import '../StockTable/style.scss';
 
 interface StockTableProps {
   stocks?: Stock[];
