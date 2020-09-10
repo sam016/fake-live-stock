@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import TimeAgo from 'react-timeago'
 import { Stock } from '../../models/stock';
-import ColorText from '../ColorText';
+import StockPrice from '../StockPrice';
 import './style.scss';
 
 interface StockRowProps {
@@ -24,7 +24,7 @@ const StockRow: React.FunctionComponent<StockRowProps> = ({
     <div className="stock-row__code">{stock.code}</div>
     <div className="stock-row__name">{stock.name}</div>
     <div className="stock-row__price">
-      <ColorText prefix="$" value={stock.price} />
+      <StockPrice prefix="$" value={stock.price} />
     </div>
     <div className="stock-row__ts" >
       <TimeAgo date={stock.lastTS} minPeriod={5} />
