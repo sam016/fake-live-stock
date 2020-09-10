@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import a from 'socket.io-client';
+import socketIO from 'socket.io-client';
 import { Stock } from '../models/stock';
 
 type IDictStock = { [id: string]: Stock };
@@ -9,7 +9,7 @@ function useStockWS(): [IDictStock, string] {
   const [status, setStatus] = useState<string>('');
 
   useEffect(() => {
-    const client = a.connect('http://localhost:4000');
+    const client = socketIO.connect('http://localhost:4000');
 
     // when connected with server
     client.on('connect', () => {
@@ -40,19 +40,24 @@ function useStockWS(): [IDictStock, string] {
           .split('\n')
           .map((item: string) => item.split(' '))
           .reduce((prev: IDictStock, [stockCode, price]: string[]) => {
+            const ts = new Date().getTime();
+            const data = {
+              price: +price,
+              lastTS: ts,
+            };
+
             if (oldData[stockCode]) {
               prev[stockCode] = {
                 ...oldData[stockCode],
-                price: +price,
-                lastTS: new Date().getTime(),
+                ...data,
               };
+              prev[stockCode].history.push({ ...data, ts });
             } else {
               prev[stockCode] = {
                 code: stockCode,
                 name: stockCode,
-                price: +price,
-                lastTS: new Date().getTime(),
                 history: [],
+                ...data,
               };
             }
 

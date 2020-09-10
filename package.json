@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
+    "react-charts": "^2.0.0-beta.7",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
     "react-timeago": "^4.4.0",
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.161",
     "@types/react-timeago": "^4.1.1",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",

@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import debounce from 'lodash/debounce';
 import StockTable from '../../components/StockTable';
-import './style.scss';
 import useStockWS from '../../hooks/useStockWS';
 import { Stock } from '../../models/stock';
+import StockChartContainer from '../StockChartContainer';
+import './style.scss';
 
 /* const STOCKS = [
   { code: 'st', name: 'strategic', price: 42.22, lastTS: 0, history: [] },
@@ -46,10 +48,10 @@ const App = () => {
   }, [stocks, searchText]);
 
   // create a search handler for search box
-  const searchChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchText = e.target.value.trim();
+  const searchChangeHandler = useCallback(debounce((value: String) => {
+    const searchText = value.trim();
     setSearchText(searchText);
-  }, []);
+  }, 100), []);
 
   // create a search handler for search box
   const stockSelectHandler = useCallback((stock: Stock) => {
@@ -61,7 +63,7 @@ const App = () => {
   }, [selectedStock]);
 
   return (
-    <div className="app">
+    <div className={`app ${selectedStock ? 'app--has-chart' : ''}`}>
       <div className="app__header page-container">
         <div className="h2">
           Live Stock
@@ -69,7 +71,7 @@ const App = () => {
         <div className="search-box">
           <input
             type="text"
-            onChange={searchChangeHandler}
+            onChange={(e) => searchChangeHandler(e.target.value)}
             placeholder="Search stocks..."
           />
         </div>
@@ -83,11 +85,21 @@ const App = () => {
                 : <>No data available from server</>
             }
           </div>
-          : <StockTable
-            stocks={filteredStocks}
-            onStockClick={stockSelectHandler}
-          />}
+          :
+          <div className="stock-table-container">
+            <StockTable
+              stocks={filteredStocks}
+              selectedStock={selectedStock}
+              onStockClick={stockSelectHandler}
+            />
+          </div>}
       </div>
+      {selectedStock && <div className="page-container app-stock-chart">
+        <StockChartContainer
+          stock={stockData[selectedStock.code]}
+          onHide={() => setSelectedStock(undefined)}
+        />
+      </div>}
       <div className="app__footer page-container">
         <div className="builder">
           Built by sam016

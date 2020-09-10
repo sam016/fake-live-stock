@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import './style.scss';
 
 interface StockPriceProps {
@@ -10,6 +10,7 @@ const StockPrice: React.FunctionComponent<StockPriceProps> = ({
   value,
   prefix = '',
 }) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialValue = useMemo(() => value, []);
 
   const color = useMemo(() => {
