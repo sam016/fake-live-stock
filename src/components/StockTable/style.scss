@@ -36,6 +36,10 @@
     background-color: rgba(0, 0, 0, 0.05);
   }
 
+  &--selected {
+    background-color: #0068FB47!important;
+  }
+
   &:focus {
     outline: 1px solid dodgerblue;
   }

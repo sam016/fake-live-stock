@@ -13,10 +13,11 @@ interface StockRowProps {
 
 const StockRow: React.FunctionComponent<StockRowProps> = ({
   stock,
+  isSelected,
   onClick,
   onKeyPress,
 }) => {
-  return <div className="stock-row"
+  return <div className={`stock-row ${isSelected ? 'stock-row--selected' : ''}`}
     tabIndex={0}
     onClick={(e,) => onClick(e, stock)}
     onKeyPress={(e) => onKeyPress(e, stock)}
@@ -48,7 +49,7 @@ const StockTable: React.FunctionComponent<StockTableProps> = React.memo(({
   }, [onStockClick]);
 
   const keyPressHandler = useCallback((e: React.KeyboardEvent, stock: Stock) => {
-    if (e.keyCode === 13) {
+    if (e.key === 'Enter') {
       onStockClick(stock);
     }
   }, [onStockClick]);

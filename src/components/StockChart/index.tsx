@@ -21,8 +21,8 @@ const StockChart: React.FunctionComponent<StockChartProps> = ({
   ], [stock]);
 
   const axes = React.useMemo(() => [
-    { primary: true, type: 'time', position: 'bottom' },
-    { type: 'linear', position: 'left' }
+    { type: 'time', position: 'bottom', primary: true, },
+    { type: 'linear', position: 'left' },
   ], []);
 
   return <div className="chart"
