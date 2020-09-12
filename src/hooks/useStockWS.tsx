@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import moment from 'moment';
 import socketIO from 'socket.io-client';
 import { Stock } from '../models/stock';
 
@@ -43,21 +44,27 @@ function useStockWS(): [IDictStock, string] {
             const ts = new Date().getTime();
             const data = {
               price: +price,
-              lastTS: ts,
+              ts,
             };
 
             if (oldData[stockCode]) {
               prev[stockCode] = {
                 ...oldData[stockCode],
-                ...data,
+                lastTS: ts,
+                price: data.price,
+                history: [
+                  ...oldData[stockCode].history,
+                  data,
+                ],
               };
-              prev[stockCode].history.push({ ...data, ts });
             } else {
               prev[stockCode] = {
                 code: stockCode,
                 name: stockCode,
-                history: [],
-                ...data,
+                history: [data],
+                firstTS: moment(ts),
+                lastTS: ts,
+                price: data.price,
               };
             }
 
