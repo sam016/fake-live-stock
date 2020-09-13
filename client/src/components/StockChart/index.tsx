@@ -65,10 +65,9 @@ const StockChart: React.FunctionComponent<StockChartProps> = ({
 
   // const rootFontSize = parseInt(window.getComputedStyle(document.body).getPropertyValue('font-size'), 10);
 
-  return <div className="chart"
+  return <div className="stock-chart"
     style={{
       width: 'calc(100% - 2rem)',
-      height: '36rem',
     }}
   >
     <Line data={data} options={chartOptions} />
