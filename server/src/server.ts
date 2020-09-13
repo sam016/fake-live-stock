@@ -2,8 +2,9 @@ import express from 'express';
 import socketIO from 'socket.io';
 import { getRandomData } from './stocks';
 
+const port = process.env.PORT || 4000;
 const app = express();
-app.set('port', process.env.PORT || 4000);
+app.set('port', port);
 
 const http = require('http').Server(app);
 
@@ -23,8 +24,8 @@ io.on('connection', function (client) {
       .map(({ stockCode, price }) => `${stockCode} ${price}`)
       .join('\n');
 
-    client.emit('data', strData);
-  }, 1000);
+    client.emit('message', strData);
+  }, 500);
 
   client.on('disconnect', function (data) {
     console.log('client closed');
@@ -33,6 +34,6 @@ io.on('connection', function (client) {
 
 });
 
-const server = http.listen(4000, function () {
-  console.log('listening on *:4000');
+http.listen(port, function () {
+  console.log(`listening on *:${port}`);
 });
