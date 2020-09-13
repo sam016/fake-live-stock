@@ -4,39 +4,35 @@ import { Line, ChartData } from 'react-chartjs-2';
 import chartjs from 'chart.js';
 import { StockChartProps } from './props';
 
-const INTERVALS = [
-  [1, 2],
-  [5, 10],
-  [10, 10],
-  [15, 15],
-  [30, 30],
-  [45, 45],
-];
-
 const StockChart: React.FunctionComponent<StockChartProps> = ({
   stock
 }) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const momentTS0 = React.useMemo(() => moment(stock.history[0].ts), [stock]);
+  // get first stock update TS
+  const ts0 = React.useMemo(() => stock.history[0].ts, [stock]);
+
+  // get moment object from first stock update
+  const momentTS0 = React.useMemo(() => moment(ts0), [ts0]);
+
+  // get the diff in minutes b/w first stock update and last stock update
   const diffMinutes = React.useMemo(() => moment(stock.lastTS).diff(momentTS0, 'minute'), [momentTS0, stock.lastTS]);
-  const maxBound = React.useMemo(() => {
-    if (diffMinutes < 10) {
-      return momentTS0.add(diffMinutes + 1.5, 'minute');
+
+  // get the next nearest max bound data as number
+  const nextNearestMin = React.useMemo(() => {
+    if (diffMinutes < 15) {
+      return diffMinutes + 1.5;
     }
 
     if (diffMinutes < 30) {
-      const nearestMin = Math.floor(diffMinutes / 5) * 5 + 5;
-      return momentTS0.add(nearestMin, 'minute');
+      return Math.floor(diffMinutes / 5) * 5 + 6;
     }
 
-    const interval = INTERVALS.find(interval => (diffMinutes < interval[0]));
+    return (Math.floor(diffMinutes / 60) + 1) * 60;
+  }, [diffMinutes]);
 
-    if (interval) {
-      return momentTS0.add(interval[1], 'minute');
-    }
-
-    return momentTS0.add(Math.floor(diffMinutes / 60) + 1, 'hour');
-  }, [momentTS0, diffMinutes]);
+  // get the max bound data in graph as moment
+  const maxBound = React.useMemo(() => {
+    return momentTS0.add(nextNearestMin, 'minute');
+  }, [momentTS0, nextNearestMin]);
 
   const data = React.useMemo<ChartData<chartjs.ChartData>>(() => ({
     datasets: [{
@@ -75,7 +71,7 @@ const StockChart: React.FunctionComponent<StockChartProps> = ({
       height: '36rem',
     }}
   >
-    <Line data={data} options={chartOptions}/>
+    <Line data={data} options={chartOptions} />
   </div>
 };
 
