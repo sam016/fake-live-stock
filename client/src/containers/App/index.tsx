@@ -5,7 +5,6 @@ import useStockWS from '../../hooks/useStockWS';
 import { Stock } from '../../models/stock';
 import StockChartContainer from '../StockChartContainer';
 import './style.scss';
-import { isInViewport } from '../../helpers/dom';
 
 const App = () => {
   const [stockData, status] = useStockWS();
