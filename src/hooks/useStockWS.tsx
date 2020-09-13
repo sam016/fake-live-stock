@@ -1,66 +1,50 @@
 import { useState, useEffect } from 'react';
 import moment from 'moment';
-import socketIO from 'socket.io-client';
+import { StockService, getStockService } from '../services/StockService';
 import { Stock } from '../models/stock';
+import config from '../config';
 
 type IDictStock = { [id: string]: Stock };
 
 function useStockWS(): [IDictStock, string] {
   const [stockData, setStockData] = useState<IDictStock>({});
-  const [status, setStatus] = useState<string>('');
+  const [status, setStatus] = useState<string>('Idle');
 
   useEffect(() => {
-    const client = socketIO.connect('http://localhost:4000');
+    const stockService: StockService = getStockService(config.env, config.wsURL);
 
-    // when connected with server
-    client.on('connect', () => {
-      console.log("ws connected");
-      setStatus('Connected');
+    stockService.onStatusChange = ((status: string) => {
+      setStatus(status);
     });
 
-    // when disconnected from server
-    client.on('disconnect', () => {
-      console.log("ws disconnected");
-      setStatus('Disconnected');
-    });
-
-    // when socket is trying to reconnect
-    client.on('reconnecting', () => {
-      console.log("ws reconnecting");
-      setStatus('Reconnecting');
-    });
-
-    // when data is available
-    client.on('data', (data: string) => {
-      if (!data || data.length <= 0) {
+    stockService.onLiveData = ((liveData) => {
+      if (liveData.length === 0) {
         return;
       }
 
       setStockData(oldData => {
-        const updatedData = data
-          .split('\n')
-          .map((item: string) => item.split(' '))
-          .reduce((prev: IDictStock, [stockCode, price]: string[]) => {
+        const updatedData = liveData
+          .reduce((prev: IDictStock, { code, price }) => {
             const ts = new Date().getTime();
             const data = {
-              price: +price,
+              price,
               ts,
             };
 
-            if (oldData[stockCode]) {
-              prev[stockCode] = {
-                ...oldData[stockCode],
+            if (oldData[code]) {
+              prev[code] = {
+                ...oldData[code],
                 lastTS: ts,
                 price: data.price,
                 history: [
-                  ...oldData[stockCode].history,
+                  ...oldData[code].history,
                   data,
                 ],
               };
             } else {
-              prev[stockCode] = {
-                code: stockCode,
-                name: stockCode,
+              prev[code] = {
+                code: code,
+                name: code,
                 history: [data],
                 firstTS: moment(ts),
                 lastTS: ts,
@@ -78,11 +62,10 @@ function useStockWS(): [IDictStock, string] {
       });
     });
 
+    stockService.begin();
+
     return () => {
-      if (client) {
-        console.log('Closing connection');
-        client.close();
-      }
+      stockService.close();
     };
   }, []);
 
