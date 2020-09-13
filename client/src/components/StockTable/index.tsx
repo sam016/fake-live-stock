@@ -7,8 +7,8 @@ import './style.scss';
 interface StockRowProps {
   stock: Stock;
   isSelected: boolean;
-  onClick: (e: React.MouseEvent, stock: Stock) => void;
-  onKeyPress: (e: React.KeyboardEvent, stock: Stock) => void;
+  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, stock: Stock) => void;
+  onKeyPress: (e: React.KeyboardEvent<HTMLDivElement>, stock: Stock) => void;
 };
 
 const StockRow: React.FunctionComponent<StockRowProps> = ({
@@ -23,7 +23,7 @@ const StockRow: React.FunctionComponent<StockRowProps> = ({
     onKeyPress={(e) => onKeyPress(e, stock)}
   >
     <div className="stock-row__code">{stock.code}</div>
-    <div className="stock-row__name">{stock.name}</div>
+    {/* <div className="stock-row__name">{stock.name}</div> */}
     <div className="stock-row__price">
       <StockPrice prefix="$" value={stock.price} />
     </div>
@@ -36,7 +36,7 @@ const StockRow: React.FunctionComponent<StockRowProps> = ({
 interface StockTableProps {
   stocks: Stock[];
   selectedStock?: Stock,
-  onStockClick: (stock: Stock) => void;
+  onStockClick: (element: HTMLDivElement, stock: Stock) => void;
 };
 
 const StockTable: React.FunctionComponent<StockTableProps> = React.memo(({
@@ -44,13 +44,13 @@ const StockTable: React.FunctionComponent<StockTableProps> = React.memo(({
   selectedStock,
   onStockClick,
 }) => {
-  const clickHandler = useCallback((e: React.MouseEvent, stock: Stock) => {
-    onStockClick(stock);
+  const clickHandler = useCallback((e: React.MouseEvent<HTMLDivElement>, stock: Stock) => {
+    onStockClick(e.currentTarget, stock);
   }, [onStockClick]);
 
-  const keyPressHandler = useCallback((e: React.KeyboardEvent, stock: Stock) => {
+  const keyPressHandler = useCallback((e: React.KeyboardEvent<HTMLDivElement>, stock: Stock) => {
     if (e.key === 'Enter') {
-      onStockClick(stock);
+      onStockClick(e.currentTarget, stock);
     }
   }, [onStockClick]);
 

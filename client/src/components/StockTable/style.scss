@@ -8,7 +8,10 @@
 
 .stock-row {
   display: grid;
-  grid-template-columns: var(--size-col-code) minmax(9rem, 1fr) var(--size-col-price) var(--size-col-ts);
+  grid-template-columns:
+    minmax(var(--size-col-code), 1fr)
+    minmax(var(--size-col-price), 1fr)
+    minmax(var(--size-col-ts), 1fr);
   column-gap: 1rem;
   cursor: pointer;
 
@@ -37,7 +40,7 @@
   }
 
   &--selected {
-    background-color: #0068FB47!important;
+    background-color: #0068fb47 !important;
   }
 
   &:focus {

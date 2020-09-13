@@ -1,9 +1,10 @@
 @import "../../assets/styles/mixins";
 
 .app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  height: 100vh;
+  max-height: 100vh;
 
   &__header {
     display: flex;
@@ -25,35 +26,15 @@
     }
   }
 
-  &__content {
-    &.page-container {
-      padding-top: 8rem;
-      padding-bottom: 4rem;
-    }
-  }
-
-  &--has-chart &__content {
-    &.page-container {
-      padding-top: 6rem;
-      padding-bottom: 25rem;
-    }
-  }
-
-  .app-stock-chart,
-  &__header,
-  &__footer {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
+  &__content.page-container {
+    overflow: auto;
   }
 
   .app-stock-chart {
-    bottom: 4.5rem;
     background-color: white;
   }
 
   &__footer {
-    bottom: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -99,15 +80,7 @@
       flex-direction: row;
     }
 
-    &--has-chart &__content {
-      &.page-container {
-        padding-top: 6rem;
-        padding-bottom: 24rem;
-      }
-    }
-
     .app-stock-chart {
-      bottom: 3.5rem;
       background-color: white;
     }
   }
